@@ -1,5 +1,7 @@
 <!-- Load the base class template from Polymer  -->
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <!-- Every "view" is a DOM module  -->
 <dom-module id="my-brd-view">
@@ -43,10 +45,13 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr;
             }
+            paper-toggle-button {
+                justify-self: start;
+            }
         </style>
         <div class="wrapper">
             <div class="box banner">
-                <div></div>
+                <paper-toggle-button>Let's get bardin'</paper-toggle-button>
                 <img class="sprite" src="../images/res/brd/sprite.png"></img>
             </div>
         
