@@ -1,0 +1,94 @@
+<!-- Load the base class template from Polymer  -->
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<!-- Every "view" is a DOM module  -->
+<dom-module id="my-brd-view">
+    <!-- Define this element's style and local DOM -->
+    <template>
+        <style>
+            :host {
+                padding: 20px;
+                font-family: inherit;
+                background-color: transparent;
+            }
+
+            .wrapper {
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: 150px repeat(9, auto);
+                justify-content: center;
+
+                height: 800px;
+                padding: 20px;
+            }
+
+            .box {
+                background-color: #444;
+                color: #ccc;
+                padding: 5px;
+                font-size: 125%;
+                justify-items: end;
+            }
+
+            .left { grid-column: 1; }
+            .right { grid-column: 3 / -1 }
+            .summary { grid-column: 2 / 3; grid-row: 4 / 7; }
+            .sprite { max-width: 100%; max-height: 100%;  }
+            .banner { 
+                grid-column: 1 / -1;
+                grid-row: 1;
+                background-color: transparent;
+
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+        </style>
+        <div class="wrapper">
+            <div class="box banner">
+                <div></div>
+                <img class="sprite" src="../images/res/brd/sprite.png"></img>
+            </div>
+        
+            <div class="box left"><img src="../images/res/brd/032341.png" class="thumbnail" alt="Genji Greatbow"> weapon</div>
+            <div class="box left"><img src="../images/res/brd/040469.png" class="thumbnail" alt="Genji Eboshi of Aiming"> hat</div>
+            <div class="box right"><img src="../images/res/brd/048711.png" class="thumbnail" alt=""> earrings</div>
+    
+            <div class="box left"><img src="../images/res/brd/042938.png" class="thumbnail" alt=""> chest</div>
+            <div class="box right"><img src="../images/res/brd/048479.png" class="thumbnail" alt=""> necklace</div>
+    
+            <div class="box left"><img src="../images/res/brd/049506.png" class="thumbnail" alt=""> gloves</div>
+            <div class="box right"><img src="../images/res/brd/048984.png" class="thumbnail" alt=""> bracelet</div>
+    
+            <div class="box left"><img src="../images/res/brd/047291.png" class="thumbnail" alt=""> belt</div>
+            <div class="box right"><img src="../images/res/brd/048233.png" class="thumbnail" alt=""> ring</div>
+    
+            <div class="box left"><img src="../images/res/brd/045943.png" class="thumbnail" alt=""> pants</div>
+            <div class="box right"><img src="../images/res/brd/048237.png" class="thumbnail" alt=""> ring</div>
+    
+            <div class="box left"><img src="../images/res/brd/047099.png" class="thumbnail" alt=""> shoes</div>
+            <div class="box summary">
+                <p>Total:</p>
+                <ul>
+                    <li>Dexterity: <value>2546</value></li>
+                    <li>Critical Hit Rate: <value>2152</value></li>
+                    <li>Skill Speed: <value>1245</value></li>
+                    <li>Direct Hit Rate: <value>1505</value></li>
+                </ul>
+            </div>    
+        </div>
+        
+
+    </template>
+
+    <script>
+        // define the new element brd-view
+        class MyBrdView extends Polymer.Element {
+            static get is() { return 'my-brd-view'; }
+        }
+
+        // registers the new custom element brd-view to the browser
+        customElements.define(MyBrdView.is, MyBrdView);
+    </script>
+        
+</dom-module>

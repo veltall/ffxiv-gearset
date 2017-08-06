@@ -1,0 +1,19 @@
+{
+  "name": "polymer-starter-kit",
+  "version": "1.0.1",
+  "license": "BSD-3-Clause",
+  "main": "main.js",
+  "devDependencies": {
+    "electron": "~1.6.2",
+    "eslint": "^3.19.0",
+    "eslint-config-google": "^0.7.0",
+    "eslint-plugin-html": "^2.0.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "lint": "npm run lint:javascript && polymer lint",
+    "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
+    "test": "polymer test",
+    "test:integration": "polymer build # test that psk builds without error with the CLI"
+  }
+}
