@@ -1,4 +1,4 @@
-# FFXIV Gearset
+# FFXIV Gearset [WIP]
 
 A personal tool for customization of gearsets in the MMORPG Final Fantasy XIV, built with various web technologies.
 
