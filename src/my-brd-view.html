@@ -12,6 +12,13 @@
                 padding: 20px;
                 font-family: inherit;
                 background-color: transparent;
+                --brd-temp-color: transparent;
+                --brd-view-background-color: #444;
+                --brd-view-color: #ccc;
+            }
+            :host([theme="dark"]) {
+                --brd-view-background-color: #ccc;
+                --brd-view-color: #444; 
             }
 
             .wrapper {
@@ -24,10 +31,10 @@
                 height: 800px;
                 padding: 20px;
             }
-
+    
             .box {
-                background-color: #444;
-                color: #ccc;
+                background-color: var(--brd-view-background-color);
+                color: var(--brd-view-color);
                 padding: 5px;
                 font-size: 125%;
                 justify-items: end;
@@ -37,7 +44,7 @@
             .right { grid-column: 3 / -1 }
             .summary { grid-column: 2 / 3; grid-row: 4 / 7; }
             .sprite { max-width: 100%; max-height: 100%;  }
-            .banner { 
+            .banner {
                 grid-column: 1 / -1;
                 grid-row: 1;
                 background-color: transparent;
@@ -47,11 +54,14 @@
             }
             paper-toggle-button {
                 justify-self: start;
+                --paper-toggle-button-checked-bar-color: purple;
+                --paper-toggle-button-checked-button-color: purple;
+                --paper-toggle-button-checked-ink-color: purple;
             }
         </style>
         <div class="wrapper">
             <div class="box banner">
-                <paper-toggle-button>Let's get bardin'</paper-toggle-button>
+                <paper-toggle-button theme-status$="[[theme]]" on-change="toggleTheme" checked>Let's get bardin'</paper-toggle-button>
                 <img class="sprite" src="../images/res/brd/sprite.png"></img>
             </div>
         
@@ -82,14 +92,32 @@
                 </ul>
             </div>    
         </div>
-        
-
     </template>
 
     <script>
         // define the new element brd-view
         class MyBrdView extends Polymer.Element {
             static get is() { return 'my-brd-view'; }
+            static get properties() {
+                return {
+                    theme: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: "dark",
+                    }
+                }
+            }
+            toggleTheme() {
+                if(this.theme === "dark") {
+                    this.theme = "light";
+                } else {
+                    this.theme = "dark";
+                }
+            }
+            constructor() {
+                super();
+            }
         }
 
         // registers the new custom element brd-view to the browser

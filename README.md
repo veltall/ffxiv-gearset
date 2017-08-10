@@ -7,12 +7,14 @@ A personal tool for customization of gearsets in the MMORPG Final Fantasy XIV, b
 See [nodeJS home page](https://nodejs.org/en/) for further information.
 
 ##
+###
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Electron_0.36.4_Icon.png" width="100" />
 
 [Electron](https://electron.atom.io/) wraps NodeJS and Chromium technologies into one package to allow for seamless desktop application development using web technologies.
 
 ##
+###
 
 <img src="http://sebastianmetzger.com/wp-content/uploads/2014/08/p-logo.png" width="100" />
 
