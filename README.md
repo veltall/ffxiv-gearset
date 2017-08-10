@@ -30,23 +30,27 @@ The application is run in a Chromium window controlled by Electron's main proces
 - [NodeJS and npm](https://nodejs.org/en/)
 - bower: `npm install -g bower`
 - Polymer-cli: `npm install -g polymer-cli`
-- Electron: `cd ./ffxiv-gearset && npm install`  
+
+### Install the application external files
+- Polymer: `$ bower install`
+- Electron: `$ npm install`  
 Verify that the `package.json` lists Electron as a dependency and uses Electron as the `npm start` script.
 
-`./ffxiv-gearset/package.json`
-```json
-{
-  ...
-  "devDependencies": {
-    "electron": "~1.6.2",
-    ...
-  },
-  "scripts": {
-    "start": "electron .",
-    ...
-  }
-}
-```
+    `./ffxiv-gearset/package.json`
+    ```json
+    {
+      ...
+      "devDependencies": {
+        "electron": "~1.6.2",
+        ...
+      },
+      "scripts": {
+        "start": "electron .",
+        ...
+      }
+    }
+    ```
+ 
 
 ### Run the server and load the app
 - Serve the Polymer app on localhost: `~/.../ffxiv-gearset $ polymer serve`
