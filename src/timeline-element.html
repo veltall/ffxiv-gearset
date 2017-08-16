@@ -1,0 +1,47 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="timeline-element">
+  <style>
+
+  </style>
+
+
+
+  <script>
+    // A custom Polymer element for displaying a timeline / sequence of events with time markers
+    // e.g. |------- 5s --------- event 1 ------------- 10s ------- event 2 -------...----->
+    // a timeline element has the abilities to:
+    //   - display visual elements of a timeline (arrow, time markers, zoom, etc.)
+    //   - add/remove temporal events
+    //   - display those events based in a pre-defined manner, dictated via the timeline's API
+
+    class TimelineElement extends Polymer.Element {
+      static get is() {
+        return 'timeline-element';
+      }
+
+      static get properties() {
+        return {
+          eventList: {
+            type: Array,
+            value: [],
+          },
+          zoomLevel: {
+            type: Number,
+            value: 5,
+          }
+        }
+      }
+
+      addEvent(newEvent) {
+        this.eventList.push(newEvent);
+      }
+
+      constructor() {
+        super();
+      }
+    }
+
+    window.customElements.define(TimelineElement.is, TimelineElement);
+  </script>
+</dom-module>

@@ -1,0 +1,112 @@
+<!-- Loading external libs  -->
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel='import' href='../bower_components/paper-input/paper-input.html'>
+<link rel='import' href='../bower_components/paper-button/paper-button.html'>
+<link rel='import' href='../bower_components/iron-form/iron-form.html'>
+<link rel='import' href='../bower_components/paper-checkbox/paper-checkbox.html'>
+
+<dom-module id="my-timeline-view">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+                padding: 10px;
+            }
+
+            .long-card {
+                margin: 24px;
+                padding: 16px;
+                color: #757575;
+                border-radius: 5px;
+                background-color: #fff;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                width: 2000px;
+            }
+
+            paper-button {
+                background: #333366;
+                color: white;
+            }
+
+            #reset {
+                background: #aa3322;
+            }
+        </style>
+
+        <div class="card">
+            <h2>timeline heading</h1>
+                <p>Random text
+                    <p>
+        </div>
+        <div class="long-card">
+            <h2>really long card that should necessitates a scrollbar</h2>
+            <p id="placeholder">placeholder text</p>
+            <br><br>
+            <!-- <input type="checkbox" checked onchange="form1.allowRedirect = !this.checked;"> Prevent automatic form redirection<br><br> -->
+            <paper-checkbox checked onchange="toggleForm1Redirect">Prevent automatic form redirection</paper-checkbox>
+            <iron-form id="form1">
+                <form action="/foo" method="get">
+                    <paper-input type="text" name="input" required label="item to add"></paper-input>
+                    <br><br>
+                    <paper-button raised on-tap="submitForm1">Submit</paper-button>
+                    <paper-button id="reset" raised on-tap="resetForm1">Reset</paper-button>
+                </form>
+                <br>
+                <div class="form-output"></div>
+            </iron-form>
+        </div>
+    </template>
+
+    <script>
+        class MyTimelineView extends Polymer.Element {
+            static get is() {
+                return 'my-timeline-view';
+            }
+            static get properties() {
+                return {
+                    theme: {
+                        type: String,
+                        notify: true,
+                        reflectToAttribute: true,
+                        value: "light",
+                    },
+                    testArray: {
+                        type: Array,
+                        value: [],
+                    }
+                };
+            }
+            showArray() {
+                this.testArray.forEach(function (element) {
+                    console.log(element);
+                }, this);
+                // document.getElementById("placeholder").innerHTML = this.testArray.toString();
+            }
+            addToArray() {
+                this.testArray.push(inputValue);
+            }
+            constructor() {
+                super();
+            }
+
+            // extra functions for studying the behaviors of forms
+            submitForm1() {
+                document.getElementById('form1').submit();
+            }
+
+            resetForm1() {
+                document.getElementById('form1').reset();
+            }
+
+            toggleForm1Redirect() {
+                document.getElementById('form1').allowRedirect = !document.getElementById('form1').allowRedirect;
+            }
+        }
+
+        // registers the new custom element to the browser
+        window.customElements.define(MyTimelineView.is, MyTimelineView);
+    </script>
+
+</dom-module>

@@ -8,7 +8,7 @@
     <!-- Define this element's style and local DOM -->
     <template>
         <style>
-            :host {
+             :host {
                 padding: 20px;
                 font-family: inherit;
                 background-color: transparent;
@@ -16,9 +16,10 @@
                 --brd-view-background-color: #444;
                 --brd-view-color: #ccc;
             }
-            :host([theme="dark"]) {
+
+             :host([theme="dark"]) {
                 --brd-view-background-color: #ccc;
-                --brd-view-color: #444; 
+                --brd-view-color: #444;
             }
 
             .wrapper {
@@ -31,7 +32,7 @@
                 height: 800px;
                 padding: 20px;
             }
-    
+
             .box {
                 background-color: var(--brd-view-background-color);
                 color: var(--brd-view-color);
@@ -40,10 +41,24 @@
                 justify-items: end;
             }
 
-            .left { grid-column: 1; }
-            .right { grid-column: 3 / -1 }
-            .summary { grid-column: 2 / 3; grid-row: 4 / 7; }
-            .sprite { max-width: 100%; max-height: 100%;  }
+            .left {
+                grid-column: 1;
+            }
+
+            .right {
+                grid-column: 3 / -1
+            }
+
+            .summary {
+                grid-column: 2 / 3;
+                grid-row: 4 / 7;
+            }
+
+            .sprite {
+                max-width: 100%;
+                max-height: 100%;
+            }
+
             .banner {
                 grid-column: 1 / -1;
                 grid-row: 1;
@@ -52,6 +67,7 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr;
             }
+
             paper-toggle-button {
                 justify-self: start;
                 --paper-toggle-button-checked-bar-color: purple;
@@ -61,43 +77,53 @@
         </style>
         <div class="wrapper">
             <div class="box banner">
-                <paper-toggle-button theme-status$="[[theme]]" on-change="toggleTheme" checked>Let's get bardin'</paper-toggle-button>
+                <paper-toggle-button on-change="toggleTheme" checked>Let's get bardin'</paper-toggle-button>
                 <img class="sprite" src="../images/res/brd/sprite.png"></img>
             </div>
-        
+
             <div class="box left"><img src="../images/res/brd/032341.png" class="thumbnail" alt="Genji Greatbow"> weapon</div>
             <div class="box left"><img src="../images/res/brd/040469.png" class="thumbnail" alt="Genji Eboshi of Aiming"> hat</div>
             <div class="box right"><img src="../images/res/brd/048711.png" class="thumbnail" alt=""> earrings</div>
-    
+
             <div class="box left"><img src="../images/res/brd/042938.png" class="thumbnail" alt=""> chest</div>
             <div class="box right"><img src="../images/res/brd/048479.png" class="thumbnail" alt=""> necklace</div>
-    
+
             <div class="box left"><img src="../images/res/brd/049506.png" class="thumbnail" alt=""> gloves</div>
             <div class="box right"><img src="../images/res/brd/048984.png" class="thumbnail" alt=""> bracelet</div>
-    
+
             <div class="box left"><img src="../images/res/brd/047291.png" class="thumbnail" alt=""> belt</div>
             <div class="box right"><img src="../images/res/brd/048233.png" class="thumbnail" alt=""> ring</div>
-    
+
             <div class="box left"><img src="../images/res/brd/045943.png" class="thumbnail" alt=""> pants</div>
             <div class="box right"><img src="../images/res/brd/048237.png" class="thumbnail" alt=""> ring</div>
-    
+
             <div class="box left"><img src="../images/res/brd/047099.png" class="thumbnail" alt=""> shoes</div>
             <div class="box summary">
                 <p>Total:</p>
                 <ul>
-                    <li>Dexterity: <value>2546</value></li>
-                    <li>Critical Hit Rate: <value>2152</value></li>
-                    <li>Skill Speed: <value>1245</value></li>
-                    <li>Direct Hit Rate: <value>1505</value></li>
+                    <li>Dexterity:
+                        <value>2546</value>
+                    </li>
+                    <li>Critical Hit Rate:
+                        <value>2152</value>
+                    </li>
+                    <li>Skill Speed:
+                        <value>1245</value>
+                    </li>
+                    <li>Direct Hit Rate:
+                        <value>1505</value>
+                    </li>
                 </ul>
-            </div>    
+            </div>
         </div>
     </template>
 
     <script>
         // define the new element brd-view
         class MyBrdView extends Polymer.Element {
-            static get is() { return 'my-brd-view'; }
+            static get is() {
+                return 'my-brd-view';
+            }
             static get properties() {
                 return {
                     theme: {
@@ -106,22 +132,23 @@
                         reflectToAttribute: true,
                         value: "dark",
                     }
-                }
+                };
             }
             toggleTheme() {
-                if(this.theme === "dark") {
+                if (this.theme === "dark") {
                     this.theme = "light";
                 } else {
                     this.theme = "dark";
                 }
             }
+
             constructor() {
                 super();
             }
         }
 
         // registers the new custom element brd-view to the browser
-        customElements.define(MyBrdView.is, MyBrdView);
+        window.customElements.define(MyBrdView.is, MyBrdView);
     </script>
-        
+
 </dom-module>
