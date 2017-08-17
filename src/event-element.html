@@ -1,0 +1,39 @@
+<link rel='import' href='../bower_components/polymer/polymer-element.html'>
+
+<dom-module id="event-element">
+  <style>
+
+  </style>
+
+  <script>
+    class EventElement extends Polymer.Element {
+      static get is() {
+        return 'event-element';
+      }
+
+      static get properties() {
+        return {
+          timestamp: {
+            type: String,
+            value: "0:00"
+          },
+          name: {
+            type: String,
+            value: ""
+          },
+          icon: {
+            type: String, // icon text containing resource uri
+            value: "../images/res/default.png"
+          }
+        };
+      }
+
+      constructor() {
+        super();
+        this.icon = "../images/res/" + this.name + ".png";
+      }
+    }
+
+    window.customElements.define(EventElement.is, EventElement);
+  </script>
+</dom-module>

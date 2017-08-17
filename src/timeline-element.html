@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="lazy-import" href="event-element.html">
 
 <dom-module id="timeline-element">
   <style>
@@ -13,7 +14,7 @@
     // a timeline element has the abilities to:
     //   - display visual elements of a timeline (arrow, time markers, zoom, etc.)
     //   - add/remove temporal events
-    //   - display those events based in a pre-defined manner, dictated via the timeline's API
+    //   - display those events based on a pre-defined manner, dictated via the timeline's API
 
     class TimelineElement extends Polymer.Element {
       static get is() {
@@ -29,12 +30,41 @@
           zoomLevel: {
             type: Number,
             value: 5,
-          }
-        }
+          },
+        };
       }
 
+      // O(nlogn) add, which is not ideal but should be fine for non-insane numbers of events
       addEvent(newEvent) {
         this.eventList.push(newEvent);
+        this.update();
+      }
+      addEvent(eventName, eventTime) {
+        var newEvent = {};
+        newEvent.name = eventName;
+        newEvent.timestamp = eventTime;
+        this.addEvent(newEvent);
+      }
+
+      // re-sort the internal array of events in temporal order
+      update() {
+        this.eventList.sort(default_compare());
+      }
+
+      // Since this application is a timeline of events, they are logically sorted by
+      // their timestamps
+      default_compare(a, b) {
+        compare_by(a, b, "timestamp");
+      }
+
+      compare_by(a, b, field) {
+        if (a[field] < b[field]) {
+          return -1;
+        } else
+        if (a[field] > b[field]) {
+          return 1;
+        } else
+          return 0;
       }
 
       constructor() {

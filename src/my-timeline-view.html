@@ -7,6 +7,8 @@
 <link rel='import' href='../bower_components/iron-form/iron-form.html'>
 <link rel='import' href='../bower_components/paper-checkbox/paper-checkbox.html'>
 
+<link rel="lazy-import" href="timeline-element.html">
+
 <dom-module id="my-timeline-view">
     <template>
         <style include="shared-styles">
@@ -44,13 +46,16 @@
             <p>Random text</p>
         </div>
         <div class="long-card">
-            <h2>really long card that should necessitate a scrollbar</h2>
-            <p id="placeholder">placeholder text</p>
-            <br><br>
-            <paper-checkbox checked on-change="toggleForm1Redirect">Prevent automatic form redirection</paper-checkbox>
-            <iron-form id="form1">
+            <h2>Temporal List of skills to be used</h2>
+            <p>
+                CDs:
+                <span id="placeholder"></span>
+            </p>
+            <br>
+            <iron-form id="form1" allowRedirect="false">
                 <form action="/foo" method="get">
-                    <paper-input type="number" name="input" required label="add to Array"></paper-input>
+                    <paper-input type="text" name="skill-input" required label="Skill name"></paper-input>
+                    <paper-input type="text" name="time-input" required label="Timestamp" placeholder="0:00"></paper-input>
                     <br><br>
                     <paper-button raised on-tap="addToArray">Add</paper-button>
                     <paper-button raised on-tap="showArray">Show Array</paper-button>
@@ -92,12 +97,14 @@
                 this.shadowRoot.querySelector("#placeholder").innerHTML = arrayString;
             }
             addToArray() {
-                var inputValue = this.shadowRoot.querySelector("[name=input]").value;
+                var inputValue = this.shadowRoot.querySelector("[name=skill-input]").value;
                 if (inputValue) {
                     this.testArray.push(inputValue);
                 }
                 this.showArray();
+                this.$.form1.submit();
             }
+
             constructor() {
                 super();
             }
@@ -116,10 +123,6 @@
             resetForm1() {
                 this.$.form1.reset();
                 this.testArray = [];
-            }
-
-            toggleForm1Redirect() {
-                this.$.form1.allowRedirect = !document.getElementById('form1').allowRedirect;
             }
         }
 
