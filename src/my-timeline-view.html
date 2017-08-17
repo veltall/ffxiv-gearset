@@ -36,25 +36,23 @@
         </style>
 
         <div class="card">
-            <h2>timeline heading</h1>
-                <p>Random text
-                    <p>
+            <h2>timeline heading</h2>
+            <p>Random text</p>
         </div>
         <div class="long-card">
-            <h2>really long card that should necessitates a scrollbar</h2>
+            <h2>really long card that should necessitate a scrollbar</h2>
             <p id="placeholder">placeholder text</p>
             <br><br>
-            <!-- <input type="checkbox" checked onchange="form1.allowRedirect = !this.checked;"> Prevent automatic form redirection<br><br> -->
-            <paper-checkbox checked onchange="toggleForm1Redirect">Prevent automatic form redirection</paper-checkbox>
+            <paper-checkbox checked on-change="toggleForm1Redirect">Prevent automatic form redirection</paper-checkbox>
             <iron-form id="form1">
                 <form action="/foo" method="get">
-                    <paper-input type="text" name="input" required label="item to add"></paper-input>
+                    <paper-input id="pinput" type="text" name="input" required label="item to add"></paper-input>
                     <br><br>
                     <paper-button raised on-tap="submitForm1">Submit</paper-button>
                     <paper-button id="reset" raised on-tap="resetForm1">Reset</paper-button>
                 </form>
                 <br>
-                <div class="form-output"></div>
+                <div class="form-output">hi</div>
             </iron-form>
         </div>
     </template>
@@ -93,15 +91,21 @@
 
             // extra functions for studying the behaviors of forms
             submitForm1() {
-                document.getElementById('form1').submit();
+                this.$.form1.submit();
+                var textInput = this.shadowRoot.querySelector("#pinput").value;
+                if (typeof textInput == 'undefined') {
+                    textInput = "";
+                }
+                this.shadowRoot.querySelector(".form-output").innerHTML = textInput;
+                this.$.placeholder.innerHTML = "look I can change this too: " + textInput;
             }
 
             resetForm1() {
-                document.getElementById('form1').reset();
+                this.$.form1.reset();
             }
 
             toggleForm1Redirect() {
-                document.getElementById('form1').allowRedirect = !document.getElementById('form1').allowRedirect;
+                this.$.form1.allowRedirect = !document.getElementById('form1').allowRedirect;
             }
         }
 
