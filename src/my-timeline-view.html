@@ -22,7 +22,7 @@
                 border-radius: 5px;
                 background-color: #fff;
                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-                width: 2000px;
+                width: 20000px;
             }
 
             paper-button {
@@ -30,7 +30,11 @@
                 color: white;
             }
 
-            #reset {
+            #form1 {
+                width: 400px;
+            }
+
+            .reset {
                 background: #aa3322;
             }
         </style>
@@ -46,13 +50,14 @@
             <paper-checkbox checked on-change="toggleForm1Redirect">Prevent automatic form redirection</paper-checkbox>
             <iron-form id="form1">
                 <form action="/foo" method="get">
-                    <paper-input id="pinput" type="text" name="input" required label="item to add"></paper-input>
+                    <paper-input type="number" name="input" required label="add to Array"></paper-input>
                     <br><br>
-                    <paper-button raised on-tap="submitForm1">Submit</paper-button>
-                    <paper-button id="reset" raised on-tap="resetForm1">Reset</paper-button>
+                    <paper-button raised on-tap="addToArray">Add</paper-button>
+                    <paper-button raised on-tap="showArray">Show Array</paper-button>
+                    <paper-button class="reset" raised on-tap="resetForm1">Reset</paper-button>
                 </form>
                 <br>
-                <div class="form-output">hi</div>
+                <div class="form-output"></div>
             </iron-form>
         </div>
     </template>
@@ -77,31 +82,40 @@
                 };
             }
             showArray() {
-                this.testArray.forEach(function (element) {
-                    console.log(element);
-                }, this);
-                // document.getElementById("placeholder").innerHTML = this.testArray.toString();
+                // this.testArray.forEach(function (element) {
+                //     console.log(element);
+                // }, this);
+                var arrayString = this.testArray.toString();
+                if (arrayString === "") {
+                    arrayString = "[]"; // displaying sensible default / empty value
+                }
+                this.shadowRoot.querySelector("#placeholder").innerHTML = arrayString;
             }
             addToArray() {
-                this.testArray.push(inputValue);
+                var inputValue = this.shadowRoot.querySelector("[name=input]").value;
+                if (inputValue) {
+                    this.testArray.push(inputValue);
+                }
+                this.showArray();
             }
             constructor() {
                 super();
             }
 
             // extra functions for studying the behaviors of forms
-            submitForm1() {
-                this.$.form1.submit();
-                var textInput = this.shadowRoot.querySelector("#pinput").value;
-                if (typeof textInput == 'undefined') {
-                    textInput = "";
-                }
-                this.shadowRoot.querySelector(".form-output").innerHTML = textInput;
-                this.$.placeholder.innerHTML = "look I can change this too: " + textInput;
-            }
+            // submitForm1() {
+            //     this.$.form1.submit();
+            //     var textInput = this.shadowRoot.querySelector("[name=input]").value;
+            //     if (typeof textInput == 'undefined') {
+            //         textInput = "";
+            //     }
+            //     this.shadowRoot.querySelector(".form-output").innerHTML = textInput;
+            //     this.$.placeholder.innerHTML = "look I can change this too: " + textInput;
+            // }
 
             resetForm1() {
                 this.$.form1.reset();
+                this.testArray = [];
             }
 
             toggleForm1Redirect() {
