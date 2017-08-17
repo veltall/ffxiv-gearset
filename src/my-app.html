@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="my-app">
   <template>
     <style>
-      :host {
+       :host {
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
 
@@ -71,11 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
-    <app-route
-        route="{{route}}"
-        pattern="[[rootPath]]:page"
-        data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+    <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
@@ -85,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a name="view1" href="[[rootPath]]view1">View One</a>
           <a name="view2" href="[[rootPath]]view2">View Two</a>
           <a name="view3" href="[[rootPath]]view3">View Three</a>
-           <a name="brd-view" href="[[rootPath]]brd-view">Bard</a> 
+          <a name="brd-view" href="[[rootPath]]brd-view">Bard</a>
           <a name="timeline-view" href="[[rootPath]]timeline-view">Raid Timeline</a>
         </iron-selector>
       </app-drawer>
@@ -96,19 +92,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>FFXIV Gearset</div>
+            <div main-title>FFXIV Toolbox</div>
           </app-toolbar>
         </app-header>
 
-        <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="view404"
-            role="main">
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
           <my-view1 name="view1"></my-view1>
           <my-view2 name="view2"></my-view2>
           <my-view3 name="view3"></my-view3>
-          <my-brd-view name="brd-view"></my-brd-view> 
+          <my-brd-view name="brd-view"></my-brd-view>
           <my-timeline-view name="timeline-view"></my-timeline-view>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
@@ -118,7 +110,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     class MyApp extends Polymer.Element {
-      static get is() { return 'my-app'; }
+      static get is() {
+        return 'my-app';
+      }
 
       static get properties() {
         return {
@@ -156,10 +150,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         Polymer.importHref(
-            resolvedPageUrl,
-            null,
-            this._showPage404.bind(this),
-            true);
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
       }
 
       _showPage404() {

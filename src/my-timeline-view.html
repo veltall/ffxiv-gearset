@@ -7,7 +7,7 @@
 <link rel='import' href='../bower_components/iron-form/iron-form.html'>
 <link rel='import' href='../bower_components/paper-checkbox/paper-checkbox.html'>
 
-<link rel="lazy-import" href="timeline-element.html">
+<link rel="import" href="timeline-element.html">
 
 <dom-module id="my-timeline-view">
     <template>
@@ -19,7 +19,7 @@
 
             .long-card {
                 margin: 24px;
-                padding: 16px;
+                padding: 32px;
                 color: #757575;
                 border-radius: 5px;
                 background-color: #fff;
@@ -30,40 +30,43 @@
             paper-button {
                 background: #333366;
                 color: white;
+                margin: 0px;
             }
 
             #form1 {
-                width: 400px;
+                width: 300px;
             }
 
             .reset {
                 background: #aa3322;
             }
         </style>
-
         <div class="card">
-            <h2>timeline heading</h2>
-            <p>Random text</p>
-        </div>
-        <div class="long-card">
-            <h2>Temporal List of skills to be used</h2>
-            <p>
-                CDs:
-                <span id="placeholder"></span>
-            </p>
-            <br>
+            <h2>Add an Event</h2>
             <iron-form id="form1" allowRedirect="false">
                 <form action="/foo" method="get">
                     <paper-input type="text" name="skill-input" required label="Skill name"></paper-input>
                     <paper-input type="text" name="time-input" required label="Timestamp" placeholder="0:00"></paper-input>
                     <br><br>
-                    <paper-button raised on-tap="addToArray">Add</paper-button>
-                    <paper-button raised on-tap="showArray">Show Array</paper-button>
+                    <paper-button raised on-tap="addEvent">Add</paper-button>
+                    <!-- <paper-button raised on-tap="showEvents">Show Array</paper-button> -->
                     <paper-button class="reset" raised on-tap="resetForm1">Reset</paper-button>
                 </form>
                 <br>
                 <div class="form-output"></div>
             </iron-form>
+        </div>
+        <div class="card">
+            <h1>timeline simulator</h1>
+            <h3>Update: 8/17/2017</h3>
+            <p>Simple model of timeline finished:</p>
+            <ul>The Timeline-View element has a Timeline custom element as a property</ul>
+            <ul>The Timeline element has as a property an array containing multiple event elements</ul>
+            <ul>UI components are data-bound via data-form submission format</ul>
+            <ul>TODOs:
+                <ul>Implement an internal database to auto-generate icons and skill metadata</ul>
+                <ul>Implement logic checks to validate input</ul>
+            </ul>
         </div>
     </template>
 
@@ -80,49 +83,40 @@
                         reflectToAttribute: true,
                         value: "light",
                     },
-                    testArray: {
-                        type: Array,
-                        value: [],
+                    timeline: {
+                        type: Object,
+                        value: function () {
+                            return new TimelineElement();
+                        }
                     }
                 };
             }
-            showArray() {
-                // this.testArray.forEach(function (element) {
-                //     console.log(element);
-                // }, this);
-                var arrayString = this.testArray.toString();
-                if (arrayString === "") {
-                    arrayString = "[]"; // displaying sensible default / empty value
-                }
-                this.shadowRoot.querySelector("#placeholder").innerHTML = arrayString;
-            }
-            addToArray() {
-                var inputValue = this.shadowRoot.querySelector("[name=skill-input]").value;
-                if (inputValue) {
-                    this.testArray.push(inputValue);
-                }
-                this.showArray();
-                this.$.form1.submit();
-            }
 
+            addEvent() {
+                this.$.form1.submit();
+                var eventName = this.shadowRoot.querySelector("[name=skill-input]").value;
+                console.log("DEBUG: eventName = ", eventName);
+                var eventTime = this.shadowRoot.querySelector("[name=time-input]").value;
+                console.log("DEBUG: eventTime = ", eventTime);
+                this.timeline.addEvent(eventName, eventTime);
+
+                this.showEvents();
+            }
+            showEvents() {
+                var eventSummary = this.timeline.timelineToString();
+                if (eventSummary === "") {
+                    eventSummary = "[]"; // displaying sensible default / empty value
+                }
+                this.shadowRoot.querySelector("#placeholder").innerHTML = eventSummary;
+            }
             constructor() {
                 super();
             }
 
-            // extra functions for studying the behaviors of forms
-            // submitForm1() {
-            //     this.$.form1.submit();
-            //     var textInput = this.shadowRoot.querySelector("[name=input]").value;
-            //     if (typeof textInput == 'undefined') {
-            //         textInput = "";
-            //     }
-            //     this.shadowRoot.querySelector(".form-output").innerHTML = textInput;
-            //     this.$.placeholder.innerHTML = "look I can change this too: " + textInput;
-            // }
-
             resetForm1() {
                 this.$.form1.reset();
-                this.testArray = [];
+                this.timeline.clear();
+                this.showEvents();
             }
         }
 

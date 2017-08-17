@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="lazy-import" href="event-element.html">
+<link rel="import" href="event-element.html">
 
 <dom-module id="timeline-element">
   <style>
@@ -21,6 +21,10 @@
         return 'timeline-element';
       }
 
+      // ==================================================
+      // ================= External API ===================
+      // ==================================================
+
       static get properties() {
         return {
           eventList: {
@@ -35,36 +39,41 @@
       }
 
       // O(nlogn) add, which is not ideal but should be fine for non-insane numbers of events
-      addEvent(newEvent) {
+      addEvent(eventName, eventTime) {
+        var newEvent = new EventElement(eventName, eventTime);
+
         this.eventList.push(newEvent);
         this.update();
       }
-      addEvent(eventName, eventTime) {
-        var newEvent = {};
-        newEvent.name = eventName;
-        newEvent.timestamp = eventTime;
-        this.addEvent(newEvent);
+
+      timelineToString() {
+        var outstr = "";
+        this.eventList.forEach(function (event) {
+          outstr += event.eventToString() + ", ";
+        }, this);
+        return outstr;
       }
+
+      clear() {
+        this.eventList = [];
+      }
+
+      // ==================================================
+      // =============== Internal routines ================
+      // ==================================================
 
       // re-sort the internal array of events in temporal order
       update() {
-        this.eventList.sort(default_compare());
-      }
-
-      // Since this application is a timeline of events, they are logically sorted by
-      // their timestamps
-      default_compare(a, b) {
-        compare_by(a, b, "timestamp");
-      }
-
-      compare_by(a, b, field) {
-        if (a[field] < b[field]) {
-          return -1;
-        } else
-        if (a[field] > b[field]) {
-          return 1;
-        } else
-          return 0;
+        this.eventList.sort(function (t1, t2) {
+          var key = "timestamp";
+          if (t1[key] < t2[key]) {
+            return -1;
+          } else
+          if (t1[key] > t2[key]) {
+            return 1;
+          } else
+            return 0;
+        });
       }
 
       constructor() {

@@ -15,7 +15,7 @@
         return {
           timestamp: {
             type: String,
-            value: "0:00"
+            value: "",
           },
           name: {
             type: String,
@@ -28,8 +28,14 @@
         };
       }
 
-      constructor() {
+      eventToString() {
+        return (this.name + " @ " + this.timestamp);
+      }
+
+      constructor(newName, newTime) {
         super();
+        this.name = newName;
+        this.timestamp = newTime;
         this.icon = "../images/res/" + this.name + ".png";
       }
     }
