@@ -17,16 +17,6 @@
                 padding: 10px;
             }
 
-            .long-card {
-                margin: 24px;
-                padding: 32px;
-                color: #757575;
-                border-radius: 5px;
-                background-color: #fff;
-                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-                width: 20000px;
-            }
-
             paper-button {
                 background: #333366;
                 color: white;
@@ -57,7 +47,26 @@
             </iron-form>
         </div>
         <div class="card">
+            <!-- timeline visual element goes here -->
+            <div>
+                <h3>Basic timeline-element demo</h3>
+                <timeline-element time="00:03" title="Sentinel" icon="../images/res/ffxiv-actions/11_Paladin/0017_Sentinel.png"></timeline-element>
+                <timeline-element time="01:24" title="Earthly Star" icon="../images/res/ffxiv-actions/23_Astrologian/7439_Earthly Star.png"></timeline-element>
+                <timeline-element time="04:52" title="Benediction" icon="../images/res/ffxiv-actions/21_WhiteMage/0140_Benediction.png"></timeline-element>
+                <timeline-element time="06:21" title="Holmgang" icon="../images/res/ffxiv-actions/12_Warrior/0043_Holmgang.png"></timeline-element>
+            </div>
+        </div>
+        <div class="card">
             <h1>timeline simulator</h1>
+            <h3>Update: 8/26/2017</h3>
+            <p>Minor bugs discovered:</p>
+            <ul>The sort function for the event-element object does not meet criteria. Currently it sorts by string comparison
+                instead of interpreted temporal values of the timestamps.</ul>
+            <p>TODOs:</p>
+            <ul>Unfinished TODOs from last time</ul>
+            <ul>Apply equal vertical space between each time-interval</ul>
+            <ul>Float an event vertically based on its timestamp value</ul>
+            <hr>
             <h3>Update: 8/17/2017</h3>
             <p>Simple model of timeline finished:</p>
             <ul>The Timeline-View element has a Timeline custom element as a property</ul>
@@ -95,19 +104,15 @@
             addEvent() {
                 this.$.form1.submit();
                 var eventName = this.shadowRoot.querySelector("[name=skill-input]").value;
-                console.log("DEBUG: eventName = ", eventName);
                 var eventTime = this.shadowRoot.querySelector("[name=time-input]").value;
-                console.log("DEBUG: eventTime = ", eventTime);
                 this.timeline.addEvent(eventName, eventTime);
 
                 this.showEvents();
             }
             showEvents() {
                 var eventSummary = this.timeline.timelineToString();
-                if (eventSummary === "") {
-                    eventSummary = "[]"; // displaying sensible default / empty value
-                }
-                this.shadowRoot.querySelector("#placeholder").innerHTML = eventSummary;
+                eventSummary = "DEBUG: Event array = [ " + eventSummary + " ]";
+                this.shadowRoot.querySelector(".form-output").innerHTML = eventSummary;
             }
             constructor() {
                 super();
