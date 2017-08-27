@@ -1,10 +1,102 @@
 <link rel='import' href='../bower_components/polymer/polymer-element.html'>
+<link rel='import' href='../bower_components/iron-icons/iron-icons.html'>
 
 <dom-module id="event-element">
-  <style>
+  <template>
+    <style>
+       :host {
+        display: block;
+        --standard-timeline: #333;
+        --progress-timeline: #ff9800;
+        --done-timeline: #aa3322;
+        --icon-size: 50px;
+      }
 
-  </style>
+      .standard {
+        background-color: var(--standard-timeline);
+      }
 
+      .done {
+        background-color: var(--done-timeline) !important;
+      }
+
+      .progress {
+        background-color: var(--progress-timeline) !important;
+      }
+
+      .row {
+        display: flex;
+        flex-flow: row;
+        align-items: stretch;
+      }
+
+      .circle {
+        width: var(--icon-size);
+        height: var(--icon-size);
+        background: var(--standard-timeline);
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      iron-icon {
+        --iron-icon-height: var(--icon-size);
+        --iron-icon-width: var(--icon-size);
+      }
+
+      .line {
+        margin-left: calc(var(--icon-size) / 2 - 2px);
+        padding: 2px;
+        height: 64px;
+        background-color: var(--standard-timeline);
+      }
+
+      .time {
+        margin-right: 1rem;
+        height: 30px;
+        width: 15ch;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        font-size: 75%;
+        @apply --timeline-time;
+      }
+
+      .title {
+        margin-left: 1rem;
+        text-transform: uppercase;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: medium;
+        @apply --timeline-title;
+      }
+    </style>
+
+    <div class="row">
+      <div class="time">[[time]]</div>
+      <div>
+        <div class="row">
+          <div class="circle">
+            <iron-icon class="icon" src="[[icon]]" alt$="[[name]]" style="fill:white;"></iron-icon>
+          </div>
+          <div>
+            <div class="title">[[name]]</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="line"></div>
+        </div>
+      </div>
+      <div>
+      </div>
+    </div>
+  </template>
   <script>
     class EventElement extends Polymer.Element {
       static get is() {
@@ -13,13 +105,15 @@
 
       static get properties() {
         return {
-          timestamp: {
+          time: {
             type: String,
-            value: "",
+            value: "00:00",
+            notify: true,
           },
           name: {
             type: String,
-            value: ""
+            value: "Name",
+            notify: true,
           },
           icon: {
             type: String, // icon text containing resource uri
@@ -29,20 +123,15 @@
       }
 
       eventToString() {
-        return (this.name + " @ " + this.timestamp);
+        return (this.name + " @ " + this.time);
       }
 
       constructor(newName, newTime) {
         super();
-        
-        // pre-processing the name string
-        newName = newName.toLowerCase();
-        newName = newName.replace(/\ /g,"-");   // replace all instances of whitespace with a hyphen
-
-        // initialize with the processed values
         this.name = newName;
-        this.timestamp = newTime;
-        this.icon = "../images/res/" + this.name + ".png";
+        this.time = newTime;
+        // lowercase and trim whitespace to lookup corresponding images
+        this.icon = "../images/res/ffxiv-actions/all/" + this.name.toLowerCase().replace(/\ /g, "-") + ".png";
       }
     }
 

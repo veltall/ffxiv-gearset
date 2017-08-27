@@ -1,112 +1,17 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel='import' href='../bower_components/iron-icons/iron-icons.html'>
 <link rel="import" href="event-element.html">
 
 <dom-module id="timeline-element">
 
   <template>
     <style>
-       :host {
-        display: block;
-        --standard-timeline: #333;
-        --progress-timeline: #ff9800;
-        --done-timeline: #aa3322;
-      }
 
-      .standard {
-        background-color: var(--standard-timeline);
-      }
-
-      .done {
-        background-color: var(--done-timeline) !important;
-      }
-
-      .progress {
-        background-color: var(--progress-timeline) !important;
-      }
-
-      .row {
-        display: flex;
-        flex-flow: row;
-        align-items: stretch;
-      }
-
-      .circle {
-        width: 30px;
-        height: 30px;
-        background: var(--standard-timeline);
-        -moz-border-radius: 50%;
-        -webkit-border-radius: 50%;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-      }
-
-      iron-icon {
-        --iron-icon-height: 32px;
-        --iron-icon-width: 32px;
-        /* -moz-border-radius: 50%;
-        -webkit-border-radius: 50%;
-        border-radius: 50%; */
-      }
-
-      .line {
-        margin-left: 13px;
-        padding: 2px;
-        /* background-color: var(--standard-timeline); */
-        background-color: #555;
-      }
-
-      .time {
-        margin-right: 1rem;
-        height: 30px;
-        width: 15ch;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        font-size: 75%;
-        @apply --timeline-time;
-      }
-
-      .title {
-        margin-left: 1rem;
-        text-transform: uppercase;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: medium;
-        @apply --timeline-title;
-      }
-
-      .textContent {
-        margin-left: 2rem;
-        padding: 5px;
-        @apply --timeline-text;
-      }
     </style>
-    <div class="row">
-      <div class="time">[[time]]</div>
-      <div>
-        <div class="row">
-          <div class="circle">
-            <iron-icon src="[[icon]]" alt$="[[title]]" style="fill:white;"></iron-icon>
-          </div>
-          <div>
-            <div class="title">[[title]]</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="line"></div>
-          <div class="textContent">
-            <content></content>
-          </div>
-        </div>
-      </div>
+
+    <div id="container">
+      
     </div>
-    <!--div id="text">[[text]]</div> -->
+
   </template>
 
   <script>
@@ -136,22 +41,6 @@
             type: Number,
             value: 5,
           },
-          time: {
-            type: String,
-            value: "00:00",
-          },
-          title: {
-            type: String,
-            value: "Title",
-          },
-          icon: {
-            type: String,
-            value: "menu",
-          },
-          status: {
-            type: String,
-            value: "standard",
-          },
         };
       }
 
@@ -179,10 +68,10 @@
       // =============== Internal routines ================
       // ==================================================
 
-      // re-sort the internal array of events in temporal order
       update() {
+        // re-sort the internal array of events in temporal order
         this.eventList.sort(function (t1, t2) {
-          var key = "timestamp";
+          var key = "time";
           if (t1[key] < t2[key]) {
             return -1;
           } else
@@ -191,10 +80,25 @@
           } else
             return 0;
         });
+
+        // refresh the display
+        this.reloadView();
+      }
+
+      reloadView() {
+        super.connectedCallback();
+        // check the event list and update the representation string
+        var target = this.$.container;
+
+        this.eventList.forEach(function (event) {
+          target.appendChild(event);
+        }, this);
       }
 
       constructor() {
         super();
+        console.log('timeline created', this.eventList, this.zoomLevel);
+        console.log(this);
       }
     }
 

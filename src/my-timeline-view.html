@@ -48,13 +48,8 @@
         </div>
         <div class="card">
             <!-- timeline visual element goes here -->
-            <div>
                 <h3>Basic timeline-element demo</h3>
-                <timeline-element time="00:03" title="Sentinel" icon="../images/res/ffxiv-actions/11_Paladin/0017_Sentinel.png"></timeline-element>
-                <timeline-element time="01:24" title="Earthly Star" icon="../images/res/ffxiv-actions/23_Astrologian/7439_Earthly Star.png"></timeline-element>
-                <timeline-element time="04:52" title="Benediction" icon="../images/res/ffxiv-actions/21_WhiteMage/0140_Benediction.png"></timeline-element>
-                <timeline-element time="06:21" title="Holmgang" icon="../images/res/ffxiv-actions/12_Warrior/0043_Holmgang.png"></timeline-element>
-            </div>
+                <div id="container"></div>
         </div>
         <div class="card">
             <h1>timeline simulator</h1>
@@ -113,6 +108,7 @@
                 var eventSummary = this.timeline.timelineToString();
                 eventSummary = "DEBUG: Event array = [ " + eventSummary + " ]";
                 this.shadowRoot.querySelector(".form-output").innerHTML = eventSummary;
+                this.$.container.appendChild(this.timeline);
             }
             constructor() {
                 super();
