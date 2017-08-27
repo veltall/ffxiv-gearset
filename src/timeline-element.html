@@ -61,7 +61,11 @@
       }
 
       clear() {
+        this.eventList.forEach(function(event) {
+          this.$.container.removeChild(this.$.container.lastChild);
+        }, this);
         this.eventList = [];
+        this.update();
       }
 
       // ==================================================
@@ -97,8 +101,6 @@
 
       constructor() {
         super();
-        console.log('timeline created', this.eventList, this.zoomLevel);
-        console.log(this);
       }
     }
 
