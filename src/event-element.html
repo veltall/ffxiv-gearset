@@ -34,6 +34,12 @@
 
       constructor(newName, newTime) {
         super();
+        
+        // pre-processing the name string
+        newName = newName.toLowerCase();
+        newName = newName.replace(/\ /g,"-");   // replace all instances of whitespace with a hyphen
+
+        // initialize with the processed values
         this.name = newName;
         this.timestamp = newTime;
         this.icon = "../images/res/" + this.name + ".png";
