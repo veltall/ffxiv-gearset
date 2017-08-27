@@ -108,10 +108,13 @@
                 var eventSummary = this.timeline.timelineToString();
                 eventSummary = "DEBUG: Event array = [ " + eventSummary + " ]";
                 this.shadowRoot.querySelector(".form-output").innerHTML = eventSummary;
-                this.$.container.appendChild(this.timeline);
             }
             constructor() {
                 super();
+            }
+            ready() {
+                super.ready();
+                this.$.container.appendChild(this.timeline);
             }
 
             resetForm1() {
