@@ -6,7 +6,7 @@
 <link rel='import' href='../bower_components/paper-button/paper-button.html'>
 <link rel='import' href='../bower_components/iron-form/iron-form.html'>
 <link rel='import' href='../bower_components/paper-checkbox/paper-checkbox.html'>
-
+<link rel='import' href='../bower_components/paper-autocomplete/paper-autocomplete.html'>
 <link rel="import" href="timeline-element.html">
 
 <dom-module id="my-timeline-view">
@@ -34,8 +34,8 @@
         <div class="card">
             <h2>Add an Event</h2>
             <iron-form id="form1" allowRedirect="false">
-                <form action="/foo" method="get">
-                    <paper-input type="text" name="skill-input" required label="Skill name"></paper-input>
+                <form method="get">
+                    <paper-autocomplete type="text" name="skill-input" required label="Skill name"></paper-autocomplete>
                     <paper-input type="text" name="time-input" required label="Timestamp" placeholder="0:00"></paper-input>
                     <br><br>
                     <paper-button raised on-tap="addEvent">Add</paper-button>
@@ -98,7 +98,7 @@
 
             addEvent() {
                 this.$.form1.submit();
-                var eventName = this.shadowRoot.querySelector("[name=skill-input]").value;
+                var eventName = this.shadowRoot.querySelector("[name=skill-input]").text;
                 var eventTime = this.shadowRoot.querySelector("[name=time-input]").value;
                 this.timeline.addEvent(eventName, eventTime);
 
@@ -115,6 +115,18 @@
             ready() {
                 super.ready();
                 this.$.container.appendChild(this.timeline);
+
+                // adding input suggestion for skill choice
+                // see https://www.webcomponents.org/element/ellipticaljs/paper-autocomplete/demo/demo/paper-autocomplete-suggestions-demo.html
+                var skills = [
+                    { "text": "Rampart", "value": "90" },
+                    { 'text': 'Benediction', 'value': '180' },
+                    { 'text': 'Asylum', 'value': '60' },
+                    { 'text': 'Vengeance', 'value': '120' },
+                    {'text': 'Earthly Star', 'value': '60'},
+                ];
+                var autocomplete = this.shadowRoot.querySelector("paper-autocomplete");
+                autocomplete.source = skills;
             }
 
             resetForm1() {
