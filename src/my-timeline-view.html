@@ -96,6 +96,54 @@
                 };
             }
 
+            constructor() {
+                super();
+            }
+            // init sequence -----------------------------------------------------------
+            ready() {
+                super.ready();
+                this.$.container.appendChild(this.timeline);
+
+                var allskills = this.loadDB();
+                this.initAutocomplete(allskills);
+            }
+
+            loadDB() {
+                var fs = require('fs');
+                var allskills = {};
+
+                if (fs.existsSync('./db/skill-db.json')) {
+                    var read = fs.readFileSync('./db/skill-db.json', 'utf-8');
+                    allskills = JSON.parse(read);
+                }
+                else {
+                    var fileList = fs.readdirSync('./db/raw');   // equivalent to bash `$ ls`
+                    fileList.forEach(function (filename) {
+                        var read = fs.readFileSync('./db/raw/' + filename, 'utf-8');
+                        var skill = JSON.parse(read);
+                        allskills[skill.name] = skill["recast_time"];
+                    }, this);
+                }
+                return allskills;
+            }
+            initAutocomplete(allskills) {
+                // adding input suggestion for skill choice
+                // see https://www.webcomponents.org/element/ellipticaljs/paper-autocomplete/demo/demo/paper-autocomplete-suggestions-demo.html                
+                var autocomplete_lib = [];
+                for (var prop in allskills) {
+                    if (allskills.hasOwnProperty(prop)) {
+                        var autocomplete_entry = {};
+                        autocomplete_entry["text"] = prop;
+                        autocomplete_entry["value"] = allskills[prop];
+                        autocomplete_lib.push(autocomplete_entry);
+                    }
+                }
+                var autocomplete = this.shadowRoot.querySelector("paper-autocomplete");
+                autocomplete.source = autocomplete_lib;
+            }
+            // end init sequence -----------------------------------------------------
+
+            // UI/UX helpers ---------------------------------------------------------
             addEvent() {
                 this.$.form1.submit();
                 var eventName = this.shadowRoot.querySelector("[name=skill-input]").text;
@@ -104,27 +152,12 @@
 
                 this.showEvents();
             }
+            // displays data in text form
             showEvents() {
                 var eventSummary = this.timeline.timelineToString();
                 eventSummary = "DEBUG: Event array = [ " + eventSummary + " ]";
                 this.shadowRoot.querySelector(".form-output").innerHTML = eventSummary;
             }
-            constructor() {
-                super();
-            }
-            ready() {
-                super.ready();
-                this.$.container.appendChild(this.timeline);
-
-                var fs = require('fs');
-                var read = fs.readFileSync('./src/skill-db.json', 'utf-8');
-                var skills = JSON.parse(read);
-                // adding input suggestion for skill choice
-                // see https://www.webcomponents.org/element/ellipticaljs/paper-autocomplete/demo/demo/paper-autocomplete-suggestions-demo.html                
-                var autocomplete = this.shadowRoot.querySelector("paper-autocomplete");
-                autocomplete.source = skills;
-            }
-
             resetForm1() {
                 this.$.form1.reset();
                 this.timeline.clear();
