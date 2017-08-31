@@ -116,15 +116,11 @@
                 super.ready();
                 this.$.container.appendChild(this.timeline);
 
+                var fs = require('fs');
+                var read = fs.readFileSync('./src/skill-db.json', 'utf-8');
+                var skills = JSON.parse(read);
                 // adding input suggestion for skill choice
-                // see https://www.webcomponents.org/element/ellipticaljs/paper-autocomplete/demo/demo/paper-autocomplete-suggestions-demo.html
-                var skills = [
-                    { "text": "Rampart", "value": "90" },
-                    { 'text': 'Benediction', 'value': '180' },
-                    { 'text': 'Asylum', 'value': '60' },
-                    { 'text': 'Vengeance', 'value': '120' },
-                    {'text': 'Earthly Star', 'value': '60'},
-                ];
+                // see https://www.webcomponents.org/element/ellipticaljs/paper-autocomplete/demo/demo/paper-autocomplete-suggestions-demo.html                
                 var autocomplete = this.shadowRoot.querySelector("paper-autocomplete");
                 autocomplete.source = skills;
             }

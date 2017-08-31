@@ -45,7 +45,6 @@
       // O(nlogn) add, which is not ideal but should be fine for non-insane numbers of events
       addEvent(eventName, eventTime) {
         var newEvent = new EventElement(eventName, eventTime);
-
         this.eventList.push(newEvent);
         this.update();
       }
