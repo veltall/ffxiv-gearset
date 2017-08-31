@@ -7,6 +7,7 @@
 <link rel='import' href='../bower_components/iron-form/iron-form.html'>
 <link rel='import' href='../bower_components/paper-checkbox/paper-checkbox.html'>
 <link rel='import' href='../bower_components/paper-autocomplete/paper-autocomplete.html'>
+<link rel='import' href='../bower_components/paper-toast/paper-toast.html'>
 <link rel="import" href="timeline-element.html">
 
 <dom-module id="my-timeline-view">
@@ -22,6 +23,10 @@
                 color: white;
                 margin: 0px;
             }
+            #add404Toast {
+                --paper-toast-background-color: #aa3322;
+                --paper-toast-color: white; 
+            }
 
             #form1 {
                 width: 300px;
@@ -31,7 +36,7 @@
                 background: #aa3322;
             }
         </style>
-        <div class="card">
+        <div id="inputform" class="card">
             <h2>Add an Event</h2>
             <iron-form id="form1" allowRedirect="false">
                 <form method="get">
@@ -39,6 +44,8 @@
                     <paper-input type="text" name="time-input" required label="Timestamp" placeholder="0:00"></paper-input>
                     <br><br>
                     <paper-button raised on-tap="addEvent">Add</paper-button>
+                    <paper-toast id="add100Toast" text="Event added."></paper-toast>
+                    <paper-toast id="add404Toast" class="fit-bottom" text="Error. Check input data."></paper-toast>
                     <!-- <paper-button raised on-tap="showEvents">Show Array</paper-button> -->
                     <paper-button class="reset" raised on-tap="resetForm1">Reset</paper-button>
                 </form>
@@ -92,6 +99,10 @@
                         value: function () {
                             return new TimelineElement();
                         }
+                    },
+                    skilldb: {
+                        type: Object,
+                        value: {}
                     }
                 };
             }
@@ -104,37 +115,35 @@
                 super.ready();
                 this.$.container.appendChild(this.timeline);
 
-                var allskills = this.loadDB();
-                this.initAutocomplete(allskills);
+                this.loadDB();
+                this.initAutocomplete();
             }
 
             loadDB() {
                 var fs = require('fs');
-                var allskills = {};
 
                 if (fs.existsSync('./db/skill-db.json')) {
                     var read = fs.readFileSync('./db/skill-db.json', 'utf-8');
-                    allskills = JSON.parse(read);
+                    this.skilldb = JSON.parse(read);
                 }
                 else {
                     var fileList = fs.readdirSync('./db/raw');   // equivalent to bash `$ ls`
                     fileList.forEach(function (filename) {
                         var read = fs.readFileSync('./db/raw/' + filename, 'utf-8');
                         var skill = JSON.parse(read);
-                        allskills[skill.name] = skill["recast_time"];
+                        this.skilldb[skill.name] = skill["recast_time"];
                     }, this);
                 }
-                return allskills;
             }
-            initAutocomplete(allskills) {
+            initAutocomplete() {
                 // adding input suggestion for skill choice
                 // see https://www.webcomponents.org/element/ellipticaljs/paper-autocomplete/demo/demo/paper-autocomplete-suggestions-demo.html                
                 var autocomplete_lib = [];
-                for (var prop in allskills) {
-                    if (allskills.hasOwnProperty(prop)) {
+                for (var prop in this.skilldb) {
+                    if (this.skilldb.hasOwnProperty(prop)) {
                         var autocomplete_entry = {};
                         autocomplete_entry["text"] = prop;
-                        autocomplete_entry["value"] = allskills[prop];
+                        autocomplete_entry["value"] = this.skilldb[prop];
                         autocomplete_lib.push(autocomplete_entry);
                     }
                 }
@@ -145,12 +154,30 @@
 
             // UI/UX helpers ---------------------------------------------------------
             addEvent() {
-                this.$.form1.submit();
+                this.$.form1.submit();      // enforce basic form validation
                 var eventName = this.shadowRoot.querySelector("[name=skill-input]").text;
                 var eventTime = this.shadowRoot.querySelector("[name=time-input]").value;
-                this.timeline.addEvent(eventName, eventTime);
+                var isValid = this.validateInput(eventName, eventTime);
+                if(isValid) {
+                    this.timeline.addEvent(eventName, eventTime);
+                    this.$.add100Toast.open();
+                } else { 
+                    this.$.add404Toast.fitInto = this.$.inputform;
+                    this.$.add404Toast.open(); 
+                }
 
                 this.showEvents();
+            }
+            validateInput(name, time) {
+                var isValid = true;
+
+                // incorrect skillname
+                if(!this.skilldb.hasOwnProperty(name)) {
+                    isValid = false;
+                }
+                // ... TODO: some time calculation logic
+
+                return isValid;
             }
             // displays data in text form
             showEvents() {
