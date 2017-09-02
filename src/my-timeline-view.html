@@ -169,10 +169,10 @@
                 
                 // notifications
                 if(isValid) {
-                    // this.$.add100Toast.fitInto = this.$.inputform;
+                    this.$.add100Toast.fitInto = this.parentNode.parentNode;
                     this.$.add100Toast.open();
                 } else { 
-                    // this.$.add404Toast.fitInto = this.$.inputform;
+                    this.$.add404Toast.fitInto = this.parentNode.parentNode;
                     this.$.add404Toast.open(); 
                 }
 
