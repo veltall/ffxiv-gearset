@@ -59,4 +59,4 @@ Verify that the `package.json` lists Electron as a dependency and uses Electron 
     ```javascript
     mainWindow.loadURL("http://localhost:8081/")
     ```
-- Run the application: `npm start` (alternatively navigate to that URL in Chrome)
+- Run the application: `npm start` (alternatively navigate to that URL in Chrome, will be missing crucial features, though)
