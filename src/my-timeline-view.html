@@ -41,16 +41,26 @@
             <iron-form id="form1" allowRedirect="false">
                 <form method="get">
                     <paper-autocomplete type="text" name="skill-input" required label="Skill name"></paper-autocomplete>
-                    <paper-input type="text" name="time-input" required label="Timestamp" placeholder="0:00"></paper-input>
+                    <paper-input 
+                        type="text" 
+                        name="time-input" 
+                        required 
+                        label="Timestamp" 
+                        placeholder="0:00"
+                        auto-validate
+                        pattern="[0-9]{1,2}:[0-9]{2}"
+                        error="Please observe the timestamp format: 'mm:ss'"
+                    ></paper-input>
                     <br><br>
                     <paper-button raised on-tap="addEvent">Add</paper-button>
                     <paper-toast id="add100Toast" text="Event added."></paper-toast>
                     <paper-toast id="add404Toast" class="fit-bottom" text="Error. Check input data."></paper-toast>
                     <!-- <paper-button raised on-tap="showEvents">Show Array</paper-button> -->
+                    <paper-button raised on-tap="removeEvent">Remove</paper-button>
                     <paper-button class="reset" raised on-tap="resetForm1">Reset</paper-button>
                 </form>
                 <br>
-                <div class="form-output"></div>
+                <!-- <div class="form-output"></div> -->
             </iron-form>
         </div>
         <div class="card">
@@ -100,10 +110,6 @@
                             return new TimelineElement();
                         }
                     },
-                    skilldb: {
-                        type: Object,
-                        value: {}
-                    }
                 };
             }
 
@@ -123,15 +129,17 @@
                 var fs = require('fs');
 
                 if (fs.existsSync('./db/skill-db.json')) {
+                    // loading condensed db
                     var read = fs.readFileSync('./db/skill-db.json', 'utf-8');
-                    this.skilldb = JSON.parse(read);
+                    this.timeline.skilldb = JSON.parse(read);
                 }
                 else {
+                    // loading individual db files
                     var fileList = fs.readdirSync('./db/raw');   // equivalent to bash `$ ls`
                     fileList.forEach(function (filename) {
                         var read = fs.readFileSync('./db/raw/' + filename, 'utf-8');
                         var skill = JSON.parse(read);
-                        this.skilldb[skill.name] = skill["recast_time"];
+                        this.timeline.skilldb[skill.name] = skill["recast_time"];
                     }, this);
                 }
             }
@@ -139,11 +147,12 @@
                 // adding input suggestion for skill choice
                 // see https://www.webcomponents.org/element/ellipticaljs/paper-autocomplete/demo/demo/paper-autocomplete-suggestions-demo.html                
                 var autocomplete_lib = [];
-                for (var prop in this.skilldb) {
-                    if (this.skilldb.hasOwnProperty(prop)) {
+                var dbpointer = this.timeline.skilldb;
+                for (var prop in dbpointer) {
+                    if (dbpointer.hasOwnProperty(prop)) {
                         var autocomplete_entry = {};
                         autocomplete_entry["text"] = prop;
-                        autocomplete_entry["value"] = this.skilldb[prop];
+                        autocomplete_entry["value"] = dbpointer[prop];
                         autocomplete_lib.push(autocomplete_entry);
                     }
                 }
@@ -154,31 +163,22 @@
 
             // UI/UX helpers ---------------------------------------------------------
             addEvent() {
-                this.$.form1.submit();      // enforce basic form validation
                 var eventName = this.shadowRoot.querySelector("[name=skill-input]").text;
                 var eventTime = this.shadowRoot.querySelector("[name=time-input]").value;
-                var isValid = this.validateInput(eventName, eventTime);
+                var isValid = this.timeline.addEvent(eventName, eventTime); // contains validation logic
+                
+                // notifications
                 if(isValid) {
-                    this.timeline.addEvent(eventName, eventTime);
+                    // this.$.add100Toast.fitInto = this.$.inputform;
                     this.$.add100Toast.open();
                 } else { 
-                    this.$.add404Toast.fitInto = this.$.inputform;
+                    // this.$.add404Toast.fitInto = this.$.inputform;
                     this.$.add404Toast.open(); 
                 }
 
-                this.showEvents();
+                // this.showEvents();
             }
-            validateInput(name, time) {
-                var isValid = true;
 
-                // incorrect skillname
-                if(!this.skilldb.hasOwnProperty(name)) {
-                    isValid = false;
-                }
-                // ... TODO: some time calculation logic
-
-                return isValid;
-            }
             // displays data in text form
             showEvents() {
                 var eventSummary = this.timeline.timelineToString();
@@ -188,7 +188,7 @@
             resetForm1() {
                 this.$.form1.reset();
                 this.timeline.clear();
-                this.showEvents();
+                // this.showEvents();
             }
         }
 

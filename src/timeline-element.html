@@ -39,14 +39,43 @@
             type: Number,
             value: 5,
           },
+          skilldb: {
+            type: Object,
+            value: {}
+          }
         };
+      }
+
+      validateEvent(eventName, eventTime) {
+        var isValid = true;
+
+        // name validation
+        if (!this.skilldb.hasOwnProperty(eventName)) {
+          isValid = false;
+        } else {
+          
+          // time validation
+          this.eventList.forEach(function(event) {
+            if(event.name === eventName) {
+              if(event.isValidCooldown(eventTime) == false) {
+                isValid = false;
+              }
+            }
+          }, this);
+        }
+        return isValid;
       }
 
       // O(nlogn) add, which is not ideal but should be fine for non-insane numbers of events
       addEvent(eventName, eventTime) {
-        var newEvent = new EventElement(eventName, eventTime);
-        this.eventList.push(newEvent);
-        this.update();
+        var isValid = this.validateEvent(eventName, eventTime);
+        if(isValid){  
+          var eventCooldown = this.skilldb[eventName];
+          var newEvent = new EventElement(eventName, eventTime, eventCooldown);
+          this.eventList.push(newEvent);
+          this.update();
+        }
+        return isValid;
       }
 
       timelineToString() {
@@ -71,15 +100,8 @@
 
       update() {
         // re-sort the internal array of events in temporal order
-        this.eventList.sort(function (t1, t2) {
-          var key = "time";
-          if (t1[key] < t2[key]) {
-            return -1;
-          } else
-          if (t1[key] > t2[key]) {
-            return 1;
-          } else
-            return 0;
+        this.eventList.sort(function (e1, e2) {
+          return e1.compareTime(e2);
         });
 
         // refresh the display

@@ -51,7 +51,7 @@
       .line {
         margin-left: calc(var(--icon-size) / 2 - 2px);
         padding: 2px;
-        height: 64px;
+        height: calc(var(--icon-size) * 1.35);
         background-color: var(--standard-timeline);
       }
 
@@ -110,6 +110,10 @@
             value: "00:00",
             notify: true,
           },
+          cooldown: {
+            type: String,
+            value: "00:00"
+          },
           name: {
             type: String,
             value: "Name",
@@ -126,10 +130,68 @@
         return (this.name + " @ " + this.time);
       }
 
-      constructor(newName, newTime) {
+      compareTime(event2) {
+        var t1 = this.timeToSeconds(this.time);
+        var t2 = this.timeToSeconds(event2.time);
+        return t1 - t2;
+      }
+
+      isValidCooldown(eventTime) {
+        var isValid = true;
+        var before  = this.calculateTime(eventTime, "subtract", this.cooldown);
+        var after   = this.calculateTime(eventTime, "add",      this.cooldown);
+        if(this.isAfter(before) && this.isBefore(after)) {
+          isValid = false;
+        }
+        
+        return isValid;
+      }
+      isBefore(timeString) {
+        var t1 = this.timeToSeconds(this.time);
+        var t2 = this.timeToSeconds(timeString);
+        return t1 < t2;
+      }
+      isAfter(timeString) {
+        var t1 = this.timeToSeconds(this.time);
+        var t2 = this.timeToSeconds(timeString);
+        return t1 > t2;
+      }
+
+      timeToSeconds(timeString) {
+        var arr = timeString.split(':');
+        var minuteStr = arr[0];
+        var secondStr = arr[1];
+
+        var minuteInt = parseInt(minuteStr, 10);
+        var secondInt = parseInt(secondStr, 10);
+        var total = minuteInt * 60 + secondInt;
+        return total;
+      }
+      // currently only supports addition and subtraction
+      calculateTime(time1, operator, offset) {
+        var t1 = this.timeToSeconds(time1);
+        var result = null;
+        if (operator === "add") {
+          result = t1 + offset;
+        }
+        if (operator === "subtract") {
+          result = t1 - offset;
+        }
+        return this.secondsToString(result);
+      }
+      secondsToString(seconds) {
+        var minuteInt = Math.abs(parseInt(seconds / 60));
+        var secondInt = Math.abs(seconds % 60);
+        var outstr = minuteInt + ":" + secondInt;   // abusing JS concatenation
+        if (seconds < 0) { outstr = "-" + outstr; }
+        return outstr;
+      }
+
+      constructor(newName, newTime, newCooldown) {
         super();
         this.name = newName;
-        this.time = newTime;
+        this.time = this.secondsToString(this.timeToSeconds(newTime));
+        this.cooldown = newCooldown;
         // lowercase and trim whitespace to lookup corresponding images
         this.icon = "../images/res/ffxiv-actions/all/" + this.name.toLowerCase().replace(/\ /g, "-") + ".png";
       }
