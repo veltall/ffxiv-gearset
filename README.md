@@ -32,8 +32,9 @@ The application is run in a Chromium window controlled by Electron's main proces
 - Polymer-cli: `npm install -g polymer-cli`
 
 ### Install the application external files
-- Polymer: `$ bower install`
-- Electron: `$ npm install`  
+- Navigate to the project directory: `$ cd ~/Documents/GitHub/ffxiv-gearset`
+- Electron and other Node dependencies: `$ npm install`
+- Install polyfills and Polymer components: `$ bower install`
 Verify that the `package.json` lists Electron as a dependency and uses Electron as the `npm start` script.
 
     `./ffxiv-gearset/package.json`
@@ -58,4 +59,4 @@ Verify that the `package.json` lists Electron as a dependency and uses Electron 
     ```javascript
     mainWindow.loadURL("http://localhost:8081/")
     ```
-- Run the application: `npm start`
+- Run the application: `npm start` (alternatively navigate to that URL in Chrome)
