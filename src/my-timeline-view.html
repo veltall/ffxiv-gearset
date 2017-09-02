@@ -5,6 +5,7 @@
 <link rel='import' href='../bower_components/paper-input/paper-input.html'>
 <link rel='import' href='../bower_components/paper-button/paper-button.html'>
 <link rel='import' href='../bower_components/iron-form/iron-form.html'>
+<link rel='import' href='../bower_components/iron-icons/iron-icons.html'>
 <link rel='import' href='../bower_components/paper-checkbox/paper-checkbox.html'>
 <link rel='import' href='../bower_components/paper-autocomplete/paper-autocomplete.html'>
 <link rel='import' href='../bower_components/paper-toast/paper-toast.html'>
@@ -23,9 +24,10 @@
                 color: white;
                 margin: 5px;
             }
+
             #add404Toast {
                 --paper-toast-background-color: #aa3322;
-                --paper-toast-color: white; 
+                --paper-toast-color: white;
             }
 
             #form1 {
@@ -40,21 +42,29 @@
             <h2>Add an Event</h2>
             <iron-form id="form1" allowRedirect="false">
                 <form method="get">
-                    <paper-autocomplete type="text" name="skill-input" required label="Skill name"></paper-autocomplete>
-                    <paper-input 
-                        type="text" 
+                    <paper-autocomplete type="text" 
+                        name="skill-input" 
+                        required 
+                        label="Skill name" 
+                        on-autocomplete-selected="updateCooldown">
+                    </paper-autocomplete>
+                    <paper-input type="text" 
                         name="time-input" 
                         required 
                         label="Timestamp" 
-                        placeholder="0:00"
-                        auto-validate
-                        pattern="[0-9]{1,2}:[0-9]{2}"
-                        error-message="Please observe the timestamp format: 'mm:ss'"
-                    ></paper-input>
+                        placeholder="0:00" 
+                        auto-validate pattern="[0-9]{1,2}:[0-9]{2}"
+                        error-message="Please observe the timestamp format: 'mm:ss'">
+                        
+                        <span slot="suffix" style="display: flex;">
+                            <iron-icon icon="icons:schedule"></iron-icon>
+                            <div></div>
+                        </span>
+                    </paper-input>
                     <br><br>
                     <paper-button raised on-tap="addEvent">Add</paper-button>
-                    <paper-toast id="add100Toast" text="Event added."></paper-toast>
-                    <paper-toast id="add404Toast" class="fit-bottom" text="Error. Check input data."></paper-toast>
+                    <paper-toast id="add100Toast"></paper-toast>
+                    <paper-toast id="add404Toast" class="fit-bottom"></paper-toast>
                     <!-- <paper-button raised on-tap="showEvents">Show Array</paper-button> -->
                     <paper-button raised on-tap="removeEvent">Remove</paper-button>
                     <paper-button class="reset" raised on-tap="resetForm1">Reset</paper-button>
@@ -65,8 +75,8 @@
         </div>
         <div class="card">
             <!-- timeline visual element goes here -->
-                <h3>Basic timeline-element demo</h3>
-                <div id="container"></div>
+            <h3>Basic timeline-element demo</h3>
+            <div id="container"></div>
         </div>
         <div class="card">
             <h1>timeline simulator</h1>
@@ -132,10 +142,9 @@
                     // loading condensed db
                     var read = fs.readFileSync('./db/skill-db.json', 'utf-8');
                     this.timeline.skilldb = JSON.parse(read);
-                }
-                else {
+                } else {
                     // loading individual db files
-                    var fileList = fs.readdirSync('./db/raw');   // equivalent to bash `$ ls`
+                    var fileList = fs.readdirSync('./db/raw'); // equivalent to bash `$ ls`
                     fileList.forEach(function (filename) {
                         var read = fs.readFileSync('./db/raw/' + filename, 'utf-8');
                         var skill = JSON.parse(read);
@@ -166,14 +175,14 @@
                 var eventName = this.shadowRoot.querySelector("[name=skill-input]").text;
                 var eventTime = this.shadowRoot.querySelector("[name=time-input]").value;
                 var isValid = this.timeline.addEvent(eventName, eventTime); // contains validation logic
-                
+
                 // notifications
-                if(isValid) {
+                if (isValid) {
                     this.$.add100Toast.fitInto = this.parentNode.parentNode;
-                    this.$.add100Toast.open();
-                } else { 
+                    this.$.add100Toast.show('Event added.');
+                } else {
                     this.$.add404Toast.fitInto = this.parentNode.parentNode;
-                    this.$.add404Toast.open(); 
+                    this.$.add404Toast.show('Error. Check input data.');
                 }
 
                 // this.showEvents();
@@ -185,10 +194,10 @@
 
                 // notifications
                 if (isValid) {
-                    // this.$.add100Toast.fitInto = this.$.inputform;
+                    this.$.add100Toast.fitInto = this.parentNode.parentNode;
                     this.$.add100Toast.show('Event removed.');
                 } else {
-                    // this.$.add404Toast.fitInto = this.$.inputform;
+                    this.$.add404Toast.fitInto = this.parentNode.parentNode;
                     this.$.add404Toast.show('Event not found in timeline.');
                 }
 
@@ -205,6 +214,17 @@
                 this.$.form1.reset();
                 this.timeline.clear();
                 // this.showEvents();
+                this.$.add100Toast.fitInto = this.parentNode.parentNode;
+                this.$.add100Toast.show('Cleared.');
+            }
+
+            updateCooldown() {
+                var autocomplete = this.shadowRoot.querySelector("paper-autocomplete");
+                var suffixNode = this.shadowRoot.querySelector("[slot=suffix]");
+                var suffixText = suffixNode.getElementsByTagName('div')[0];
+                suffixNode.removeChild(suffixText);
+                suffixText.innerHTML = this.timeline.skilldb[autocomplete.text] + "(s)";
+                suffixNode.appendChild(suffixText);
             }
         }
 
