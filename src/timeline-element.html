@@ -8,7 +8,7 @@
 
     </style>
 
-    <div id="container"></div>
+    <div id="econtainer"></div>
 
   </template>
 
@@ -78,6 +78,32 @@
         return isValid;
       }
 
+      removeEvent(eventName, eventTime) {
+        var success = false;
+        this.eventList.forEach(function(event, index, list) {
+          if(       eventName === list[index].name  
+                &&  eventTime === list[index].time
+            ) {
+              list.splice(index, 1);
+              // ----- experimental  HTML DOM manipulation
+              var firstEvent = this.$.econtainer.firstChild;
+              var currentEvent = firstEvent;
+              while(currentEvent != null) {
+                var nextNode = currentEvent.nextElementSibling;
+                var timeNode  = currentEvent.shadowRoot.querySelector('.time');
+                var titleNode = currentEvent.shadowRoot.querySelector('.title');
+                if(timeNode.innerHTML === eventTime && titleNode.innerHTML === eventName) {
+                  this.$.econtainer.removeChild(currentEvent);
+                }
+                currentEvent = nextNode;
+              }
+              // -----
+              success = true;
+            }
+        }, this);
+        return success;
+      }
+
       timelineToString() {
         var outstr = "";
         this.eventList.forEach(function (event) {
@@ -87,11 +113,12 @@
       }
 
       clear() {
-        this.eventList.forEach(function(event) {
-          this.$.container.removeChild(this.$.container.lastChild);
-        }, this);
-        this.eventList = [];
-        this.update();
+        var length = this.eventList.length;
+        for(var i = 0; i < length; i++) {
+          this.$.econtainer.removeChild(this.$.econtainer.lastChild);
+          this.eventList.pop();
+        }
+        this.reloadView();
       }
 
       // ==================================================
@@ -111,7 +138,7 @@
       reloadView() {
         super.connectedCallback();
         // check the event list and update the representation string
-        var target = this.$.container;
+        var target = this.$.econtainer;
 
         this.eventList.forEach(function (event) {
           target.appendChild(event);
