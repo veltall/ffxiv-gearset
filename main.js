@@ -12,6 +12,7 @@ const url = require('url')
 let mainWindow
 let cp
 let polymer
+let projectroot
 
 function createWindow () {
   // Create the browser window.
@@ -42,6 +43,8 @@ function createWindow () {
   })
 
   mainWindow.loadURL("http://localhost:8081/")
+  projectroot = __dirname;
+  console.log('motherfucking projectroot in main.js', projectroot);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
