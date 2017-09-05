@@ -137,9 +137,9 @@
 
             loadDB() {
                 var fs = require('fs');
-                if (fs.existsSync('./db/skill-db.json')) {
+                if (fs.existsSync('./resources/app/db/skill-db.json')) {
                     // loading condensed db
-                    var read = fs.readFileSync('./db/skill-db.json', 'utf-8');
+                    var read = fs.readFileSync('./resources/app/db/skill-db.json', 'utf-8');
                     this.timeline.skilldb = JSON.parse(read);
                 } else {
                     // loading individual db files
