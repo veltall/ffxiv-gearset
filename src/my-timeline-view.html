@@ -136,24 +136,20 @@
             }
 
             loadDB() {
-                var fs = require('fs');
-                var root = __dirname;
-                console.log("before", __dirname);
                 var path = require('path');
-                root = path.normalize(root + '\\..\\..\\..\\..\\..\\..');
-                console.log("after", root);
-                
-                var dbfile = path.join(root, './db/skill-db.json');
-                console.log('dbfile', dbfile);
-                if (fs.existsSync(dbfile)) {
+                var root = path.normalize(__dirname + '\\..\\..\\..\\..\\..\\..');
+                var dbdir = path.join(root, './db');
+
+                var fs = require('fs');
+                if (fs.existsSync(dbdir + '/skill-db.json')) {
                     // loading condensed db
-                    var read = fs.readFileSync(dbfile, 'utf-8');
+                    var read = fs.readFileSync(dbdir + '/skill-db.json', 'utf-8');
                     this.timeline.skilldb = JSON.parse(read);
                 } else {
                     // loading individual db files
-                    var fileList = fs.readdirSync('./db/raw'); // equivalent to bash `$ ls`
+                    var fileList = fs.readdirSync(dbdir + '/raw'); // equivalent to bash `$ ls`
                     fileList.forEach(function (filename) {
-                        var read = fs.readFileSync('./db/raw/' + filename, 'utf-8');
+                        var read = fs.readFileSync(dbdir + '/raw/' + filename, 'utf-8');
                         var skill = JSON.parse(read);
                         this.timeline.skilldb[skill.name] = skill["recast_time"];
                     }, this);

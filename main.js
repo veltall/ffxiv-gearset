@@ -43,8 +43,6 @@ function createWindow () {
   })
 
   mainWindow.loadURL("http://localhost:8081/")
-  projectroot = __dirname;
-  console.log('motherfucking projectroot in main.js', projectroot);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
