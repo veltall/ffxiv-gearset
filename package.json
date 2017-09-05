@@ -16,5 +16,7 @@
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
   },
-  "dependencies": {}
+  "dependencies": {
+    "polymer-cli": "^1.5.4"
+  }
 }

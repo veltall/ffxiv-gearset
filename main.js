@@ -10,9 +10,7 @@ const url = require('url')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-let cp
-let polymer
-let projectroot
+let child
 
 function createWindow () {
   // Create the browser window.
@@ -32,15 +30,34 @@ function createWindow () {
   //   slashes: true
   // }))
 
-  cp = require('child_process');
-  // polymer = cp.spawn("/c/Users/Vu/AppData/Roaming/npm/polymer", ["serve", "."]);
-  // const polymer = cp.spawn("ls", ["-lh", "/usr"]);
+  const path = require('path');
+  var polypath = path.join(__dirname, './node_modules/polyserve/bin/polyserve');
+  console.log('polypath', polypath);
 
-  polymer = cp.exec("polymer serve", (err, stdout, stderr) => {
-    // code never gets here, but eh, no problem so far
-    console.log('stdout', stdout);
-    console.log('stderr', stderr);
+  // ------------ spawn / fork
+  const { spawn } = require('cross-spawn');   // windows workaround
+  child = spawn(polypath);
+
+  child.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
   })
+  child.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+  })
+  child.on('close', (code) => {
+    console.log(`spawn closed with code ${code}`);
+  })
+
+  //------------------ execFile
+  // const execFile = require('child_process').execFile;
+  // // child = execFile('which', ['polymer'], (error, stdout, stderr) => {
+  // child = execFile('./node_modules/polyserve/bin/polyserve', (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.log('stderr:@:', stderr);
+  //     throw error;
+  //   }
+  //   console.log('stdout:@:', stdout);
+  // });
 
   mainWindow.loadURL("http://localhost:8081/")
 
