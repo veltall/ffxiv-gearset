@@ -10,6 +10,8 @@ const url = require('url')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let cp
+let polymer
 
 function createWindow () {
   // Create the browser window.
@@ -28,6 +30,16 @@ function createWindow () {
   //   protocol: 'file:',
   //   slashes: true
   // }))
+
+  cp = require('child_process');
+  // polymer = cp.spawn("/c/Users/Vu/AppData/Roaming/npm/polymer", ["serve", "."]);
+  // const polymer = cp.spawn("ls", ["-lh", "/usr"]);
+
+  polymer = cp.exec("polymer serve", (err, stdout, stderr) => {
+    // code never gets here, but eh, no problem so far
+    console.log('stdout', stdout);
+    console.log('stderr', stderr);
+  })
 
   mainWindow.loadURL("http://localhost:8081/")
 
